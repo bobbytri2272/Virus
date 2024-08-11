@@ -1,7 +1,18 @@
-import ctypes
+import tkinter as tk
+import time
 
-def trigger_bsod():
-    # Gọi hàm hệ thống để tạo ra BSOD (Chỉ nên chạy trên hệ thống ảo và với quyền admin)
-    ctypes.windll.ntdll.NtRaiseHardError(0xC000000D, 0, 0, None, 6, None)
+def blink_screen():
+    root = tk.Tk()
+    root.attributes('-fullscreen', True)
+    canvas = tk.Canvas(root, bg='black')
+    canvas.pack(fill=tk.BOTH, expand=True)
 
-trigger_bsod()
+    colors = ['black', 'white']
+    while True:
+        for color in colors:
+            canvas.config(bg=color)
+            root.update()
+            time.sleep(0.1)
+    root.destroy()
+
+blink_screen()
