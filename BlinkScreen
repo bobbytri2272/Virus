@@ -8,12 +8,11 @@ def blink_screen():
     canvas.pack(fill=tk.BOTH, expand=True)
 
     colors = ['black', 'white']
-    for _ in range(10):
+    while True:
         for color in colors:
             canvas.config(bg=color)
             root.update()
             time.sleep(0.1)
-
     root.destroy()
 
 blink_screen()
