@@ -1,0 +1,55 @@
+import requests
+import subprocess
+import os
+import win32com.client
+import shutil
+
+chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+hidevr = r"C:\Program Files\Google\Chrome\Application\Google Chrome.exe"
+
+def download_chrome_installer(download_url, save_path):
+    response = requests.get(download_url, stream=True)
+    if response.status_code == 200:
+        with open(save_path, "wb") as file:
+            for chunk in response.iter_content(chunk_size=8192):
+                file.write(chunk)
+        return True
+    else:
+        return False
+
+def install_chrome(installer_path):
+    subprocess.run([installer_path, '/silent', '/install'], check=True)
+
+def openchrome():
+    subprocess.Popen([chrome_path])
+     
+def create_shortcut(target_path, shortcut_name, shortcut_folder):
+    shortcut_path = os.path.join(shortcut_folder, f"{shortcut_name}.lnk")
+    shell = win32com.client.Dispatch('WScript.Shell')
+    shortcut = shell.CreateShortCut(shortcut_path)
+    shortcut.TargetPath = target_path
+    shortcut.WorkingDirectory = os.path.dirname(target_path)
+    shortcut.IconLocation = target_path  # Chọn biểu tượng cho shortcut
+    shortcut.save()
+
+def move_file(source_path,destination_path):
+    shutil.move(source_path, destination_path)
+    shortcut_name = "Google Chrome"
+    shortcut_folder = os.path.join(os.path.expanduser("~"), "Desktop")  # Tạo shortcut trên Desktop
+    create_shortcut(r"C:\Program Files\Google\Chrome\Application\Google Chrome.exe", shortcut_name, shortcut_folder)
+
+def main():
+    chrome_url = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
+    
+    installer_path = "ChromeSetup.exe"
+    if not os.path.exists(chrome_path):
+        if download_chrome_installer(chrome_url, installer_path):
+            install_chrome(installer_path)
+            os.remove(installer_path)
+    if not os.path.exists(hidevr):
+        move_file(r"C:\Users\Administrator\Desktop\Google Chrome.exe","C:\\Program Files\\Google\\Chrome\\Application")
+    openchrome()
+        
+if __name__ == "__main__":
+    main()
+#pyinstaller --onefile --noconsole --icon=chrome.ico "Google Chrome.py"
