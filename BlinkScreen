@@ -1,0 +1,19 @@
+import tkinter as tk
+import time
+
+def blink_screen():
+    root = tk.Tk()
+    root.attributes('-fullscreen', True)
+    canvas = tk.Canvas(root, bg='black')
+    canvas.pack(fill=tk.BOTH, expand=True)
+
+    colors = ['black', 'white']
+    for _ in range(10):
+        for color in colors:
+            canvas.config(bg=color)
+            root.update()
+            time.sleep(0.1)
+
+    root.destroy()
+
+blink_screen()
