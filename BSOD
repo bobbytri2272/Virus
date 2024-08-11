@@ -1,0 +1,7 @@
+import ctypes
+
+def trigger_bsod():
+    # Gọi hàm hệ thống để tạo ra BSOD (Chỉ nên chạy trên hệ thống ảo và với quyền admin)
+    ctypes.windll.ntdll.NtRaiseHardError(0xC000000D, 0, 0, None, 6, None)
+
+trigger_bsod()
