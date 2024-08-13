@@ -1,19 +1,14 @@
-import time
-import threading
+def slowcpu():
+    def cpu_intensive_task():
+        while True:
+            pass
+    num_threads = 4
+    threads = []
 
-def cpu_intensive_task():
-    while True:
-        pass  # Đoạn mã này liên tục sử dụng CPU mà không làm gì cả
+    for _ in range(num_threads):
+        thread = threading.Thread(target=cpu_intensive_task)
+        thread.start()
+        threads.append(thread)
 
-# Tạo một số luồng để tiêu tốn nhiều tài nguyên CPU
-num_threads = 4
-threads = []
-
-for _ in range(num_threads):
-    thread = threading.Thread(target=cpu_intensive_task)
-    thread.start()
-    threads.append(thread)
-
-# Đợi các luồng hoàn thành (trong trường hợp này, chúng sẽ không bao giờ kết thúc)
-for thread in threads:
-    thread.join()
+    for thread in threads:
+        thread.join()
